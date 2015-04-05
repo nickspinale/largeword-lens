@@ -1,0 +1,24 @@
+name:                largeword-lens
+version:             0.1.0.0
+-- synopsis:            
+-- description:         
+homepage:            https://github.com/nickspinale/largeword-lens.git
+license:             MIT
+license-file:        LICENSE
+author:              Nick Spinale
+maintainer:          spinalen@carleton.edu
+-- copyright:           
+category:            Data
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  exposed-modules:     Data.LargeWord.Lens
+  -- other-modules:       
+  -- other-extensions:    
+  build-depends:       base >=4.8 && <4.9,
+                       largeword,
+                       lens
+  -- hs-source-dirs:      
+  default-language:    Haskell2010
