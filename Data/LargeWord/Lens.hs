@@ -6,11 +6,16 @@
 module Data.LargeWord.Lens
     ( leaves
     , leaf
+    , LargeKey(..)
+    , Homogenous(..)
     ) where
 
-import Data.Word
+import Control.Applicative
 import Data.LargeWord
-import Control.Lens
+import Data.Monoid
+import Data.Word
+
+type Traversal' s a = forall f. Applicative f => (a -> f a) -> s -> f s
 
 class Homogenous s a where
     leaves :: Traversal' s a
@@ -42,4 +47,4 @@ instance (Homogenous l a, Homogenous r a) => Homogenous (LargeKey l r) a where
         if i < count
         then LargeKey <$> leaf i f l <*> pure r
         else LargeKey l <$> leaf (i - count) f r
-      where count = lengthOf (leaves :: Traversal' l a) l
+      where count = getSum . getConst $ (leaves :: Traversal' l a) (Const . const (Sum 1)) l
