@@ -4,8 +4,7 @@
 {-# LANGUAGE Rank2Types #-}
 
 module Data.LargeWord.Lens
-    ( LargeKey(..)
-    , Homogenous(..)
+    ( Homogeneous(..)
     ) where
 
 import Control.Applicative
@@ -15,36 +14,41 @@ import Data.Word
 
 type Traversal' s a = forall f. Applicative f => (a -> f a) -> s -> f s
 
-class Homogenous s a where
+-- | If @'Homogeneous' s a@, then all holes in 's' are 'a''s.
+-- This allows us to traverse over them.
+class Homogeneous s a where
+    -- | A 'Traversal' over a the holes of 's'.
     leaves :: Traversal' s a
+    -- | A 'Traversal' over a specific hole of 's'.
     leaf :: Int -> Traversal' s a
+    -- | Create an 's' filled with a given value.
     populate :: a -> s
 
-instance Homogenous Word8 Word8  where
+instance Homogeneous Word8 Word8  where
     leaves = id
     leaf 0 = id
     leaf _ = const pure
     populate = id
 
-instance Homogenous Word16 Word16 where
+instance Homogeneous Word16 Word16 where
     leaves = id
     leaf 0 = id
     leaf _ = const pure
     populate = id
 
-instance Homogenous Word32 Word32 where
+instance Homogeneous Word32 Word32 where
     leaves = id
     leaf 0 = id
     leaf _ = const pure
     populate = id
 
-instance Homogenous Word64 Word64 where
+instance Homogeneous Word64 Word64 where
     leaves = id
     leaf 0 = id
     leaf _ = const pure
     populate = id
 
-instance (Homogenous l a, Homogenous r a) => Homogenous (LargeKey l r) a where
+instance (Homogeneous l a, Homogeneous r a) => Homogeneous (LargeKey l r) a where
     leaves f (LargeKey l r) = LargeKey <$> leaves f l <*> leaves f r
     leaf i f (LargeKey l r) =
         if i < count
