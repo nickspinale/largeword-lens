@@ -16,7 +16,7 @@ type Word256 = LargeKey Word128 Word128
 word256LE :: Word256 -> Builder
 word256LE = foldMapOf leaves word64LE
 ```
-Which, without this package, would have been...
+Which, without this package, would have been less neat and more error-prone:
 
 ```haskell
 import Data.ByteString.Builder
